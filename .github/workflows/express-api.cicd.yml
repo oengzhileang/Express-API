@@ -3,7 +3,6 @@ name: CI/CD Pipeline for Service
 on:
   pull_request:
     branches: [main] # Specify branches as needed
-
   push:
     branches: [main] # Specify branches as needed
 
@@ -12,13 +11,11 @@ jobs:
     runs-on: ubuntu-latest # Specifies that the job should run on the latest Ubuntu virtual environment provided by GitHub
     defaults:
       run:
-        working-directory: "./backend" # Adjust this to the root directory of your Node.js project
+        working-directory: "." # Adjust this to the root directory of your Node.js project
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4 # This step checks out your repository under $GITHUB_WORKSPACE, so your workflow can access it
-        with:
-          fetch-depth: 0 # Ensures all branches and tags are fetched, useful for versioning or other git-related operations
 
       - name: Set up Node.js
         uses: actions/setup-node@v4 # This step sets up a Node.js environment with a specified version
@@ -31,16 +28,11 @@ jobs:
       - name: Run build
         run: yarn build # Executes the build script defined in your package.json
 
-      - name: Run tests
-        env:
-          CUSTOM_ENV_VARIABLE: ${{ secrets.CUSTOM_ENV_VARIABLE }} # Replace with actual environment variables needed for testing
-        run: yarn test # Executes tests using yarn. Customize this command based on your test runner
-
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4 # Archives build artifacts for use in later jobs or for deployment
         with:
-          name: artifact-name # Optionally change the name of the artifact
-          path: ./path/to/artifacts # Adjust this to where your build outputs artifacts, e.g., './build'
+          name: build # Optionally change the name of the artifact
+          path: ./build # Adjust this to where your build outputs artifacts, e.g., './build'
   deploy:
     runs-on: ubuntu-latest # Specifies that the job should run on the latest Ubuntu virtual environment provided by GitHub
     needs: build # Specifies that this job needs the 'build' job to complete successfully before it starts
@@ -51,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v4 # Downloads artifacts from the build job
         with:
           name: build # The name of the artifact to download
-          path: ./path/to/artifacts # The path to store the downloaded artifact
+          path: ./build # The path to store the downloaded artifact
 
       - name: Prepare Deployment Directories
         uses: appleboy/ssh-action@master # SSH into the server to prepare directories
@@ -71,7 +63,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "./path/to/artifacts/*"
+          source: "./build/*"
           target: "/home/ubuntu/apps/build"
           strip_components: 1 # Adjust based on the directory depth of the source
 
@@ -83,9 +75,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo "NODE_ENV=production" > /path/to/deployment/directory/build/.env
-            echo "PORT=your_port_number" >> /path/to/deployment/directory/build/.env
-            echo "DATABASE_URL=your_database_url" >> /path/to/deployment/directory/build/.env
+            echo "NODE_ENV=production" > /home/ubuntu/apps/build/configs/.env.production
+            echo "PORT=${{ secrets.PORT }}" >> /home/ubuntu/apps/build/configs/.env.production
+            echo "MONGODB_URL=${{ secrets.MONGODB_URL}}" >> /home/ubuntu/apps/build/configs/.env.production
 
       - name: Install Dependencies and Restart Application
         uses: appleboy/ssh-action@master # Installs dependencies and restarts the application using a process manager
@@ -95,12 +87,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /path/to/deployment/directory/build
+            # Load the full user environment for non-interactive shells
+            source /home/ubuntu/.nvm/nvm.sh
+            source /home/ubuntu/.profile
+
+            cd /home/ubuntu/apps/build
             yarn install --production
             # Assume PM2 is used, Replace with other command for other process manager
             # Assume you have script for run start in production and restart in production
             # Check if the PM2 process is running
-            if pm2 show your-service-name > /dev/null; then
+            if pm2 show product-service > /dev/null; then
               echo "Application is running. Restarting..."
               yarn restart
             else
