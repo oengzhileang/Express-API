@@ -1,8 +1,8 @@
 module.exports = {
   apps: [
     {
-      name: "user-service",
-      script: "./server.js",
+      name: "product-service",
+      script: "./build/server.js",
       instances: 1,
       autorestart: true,
       watch: false,
