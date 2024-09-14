@@ -29,7 +29,7 @@ import { ProductCreateSchema } from "../schemas/product.schema";
 
 @Route("/v1/products")
 export class ProductController extends Controller {
-  //get all products
+  // * get all products
   @Get()
   public async getAllProducts(
     @Queries() queries: ProductGetAllRequest
