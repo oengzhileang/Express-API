@@ -166,7 +166,7 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "backend",
+		"title": "product-service",
 		"version": "1.0.0",
 		"license": {
 			"name": "MIT"
