@@ -3,8 +3,6 @@ import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "@/src/routes/v1/routes";
 import fs from "fs";
 import path from "path";
-import { getMethod } from "./middlewares/getMethod";
-import { requestTime } from "./middlewares/request-time";
 import { GlobalErrorHandler } from "./middlewares/global-error";
 
 // Dynamically load swagger.json
@@ -20,9 +18,7 @@ const app = express();
 // ========================
 // Global Middleware
 // ========================
-app.use(express.json()); // Help to get the json from request body
-app.use(getMethod); //console log method when have request
-app.use(requestTime); //console log request time when have request
+app.use(express.json());
 
 // ========================
 // Global API V1
@@ -32,7 +28,8 @@ RegisterRoutes(app);
 // ========================
 // API Documentations
 // ========================
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/user-api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // ========================
 // ERROR Handler
 // ========================
