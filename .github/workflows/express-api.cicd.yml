@@ -79,50 +79,27 @@ jobs:
             echo "PORT=${{ secrets.PORT }}" >> /home/ubuntu/apps/build/configs/.env.production
             echo "MONGODB_URL=${{ secrets.MONGODB_URL}}" >> /home/ubuntu/apps/build/configs/.env.production
 
-      - name: Install Yarn and PM2, and Deploy Application
-        uses: appleboy/ssh-action@master
+      - name: Install Dependencies and Restart Application
+        uses: appleboy/ssh-action@master # Installs dependencies and restarts the application using a process manager
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # Load environment variables for Node.js and nvm
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # Load nvm
-
-            # Ensure Node.js and npm are installed
-            if ! command -v node &> /dev/null; then
-              echo "Node.js is not installed. Installing Node.js..."
-              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-              nvm install node
-            fi
-
-            # Ensure Yarn is installed
-            if ! command -v yarn &> /dev/null; then
-              echo "Yarn is not installed. Installing Yarn..."
-              npm install -g yarn
-            fi
-
-            # Ensure PM2 is installed and in PATH
-            if ! command -v pm2 &> /dev/null; then
-              echo "PM2 is not installed. Installing PM2..."
-              yarn global add pm2
-            fi
-
-            # Ensure PM2 is available in PATH
-            export PATH="$HOME/.yarn/bin:$PATH"
+            # Load the full user environment for non-interactive shells
+            source /home/ubuntu/.nvm/nvm.sh
+            source /home/ubuntu/.profile
 
             cd /home/ubuntu/apps/build
             yarn install --production
-
-            # Check if the PM2 process is running, if so restart, otherwise start
+            # Assume PM2 is used, Replace with other command for other process manager
+            # Assume you have script for run start in production and restart in production
+            # Check if the PM2 process is running
             if pm2 show product-service > /dev/null; then
               echo "Application is running. Restarting..."
-              pm2 restart product-service
+              yarn restart
             else
               echo "Application is not running. Starting..."
-              pm2 start yarn --name "product-service" -- start
+              yarn start
             fi
