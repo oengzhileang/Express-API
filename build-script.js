@@ -1,7 +1,7 @@
 const esbuild = require("esbuild");
-const path = require("path");
+const { copy } = require("esbuild-plugin-copy");
 const fs = require("fs-extra");
-const copy = require("esbuild-plugin-copy").default;
+const path = require("path");
 
 esbuild
   .build({
@@ -17,7 +17,12 @@ esbuild
     plugins: [
       // (2) Solve: https://stackoverflow.com/questions/62136515/swagger-ui-express-plugin-issue-with-webpack-bundling-in-production-mode/63048697#63048697
       copy({
+        resolveFrom: "cwd",
         assets: [
+          {
+            from: ["node_modules/swagger-ui-dist/*"],
+            to: ["build/"],
+          },
           {
             from: `../node_modules/swagger-ui-dist/*.css`,
             to: "./",
@@ -47,6 +52,7 @@ esbuild
   })
   .then(() => {
     // (1) Solve: Copy swagger.json after successful build
+
     fs.copySync(
       path.resolve(__dirname, "src/docs/swagger.json"),
       path.resolve(__dirname, "build/docs/swagger.json")
