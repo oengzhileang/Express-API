@@ -4,7 +4,7 @@ FROM node:20-alpine3.19
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json
+# Copy package.json to app
 COPY package.json ./
 
 # Install dependencies
@@ -20,4 +20,4 @@ COPY tsoa.json ./
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev"]   
