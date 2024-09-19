@@ -1,7 +1,7 @@
-version: "3.8" #Specifies the version of the Docker Compose file format being used. In this case, it’s version 3.8, which provides certain features and compatibility for Docker Compose.
-services: # Defines the list of services (in this case, containers) that Docker Compose will manage. Each service represents a different part of your application.
-  backend_sample: #The name of the service.
-    container_name: backend_sample_container #Specifies the name of the container that will be created when the service runs. In this case, it will be named backend_sample_container.
+version: "3.8"
+services:
+  backend_sample:
+    container_name: backend_sample_container
     build:
       context: .
       dockerfile: Dockerfile.dev

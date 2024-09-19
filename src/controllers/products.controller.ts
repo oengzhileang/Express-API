@@ -37,7 +37,7 @@ export class ProductController extends Controller {
     try {
       const products = await ProductsService.getAllProducts(queries);
       return {
-        message: "Get all products success",
+        message: "Get all products successfully",
         data: {
           ...products,
           totalProducts: products.totalItems, // Ensure totalProducts is included
@@ -72,7 +72,7 @@ export class ProductController extends Controller {
       const products = await ProductsService.getOneProductById(id);
 
       return {
-        message: "Get One Product by id Success",
+        message: "Get One Product by id Successfully",
         data: products!,
       };
     } catch (error) {
