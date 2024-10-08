@@ -2,6 +2,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "target": "ES6",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -16,11 +18,12 @@
     "noUnusedParameters": true,
     "alwaysStrict": true,
     "pretty": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/tests/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]

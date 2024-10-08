@@ -23,7 +23,7 @@ import {
   ProductPaginatedResponse,
   ProductResponse,
 } from "./types/user-response.type";
-import { ProductCreateSchema } from "../schemas/product.schema";
+import ProductCreateSchema from "../schemas/product.schema";
 
 //change word in route need to start again
 

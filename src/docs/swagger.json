@@ -7,6 +7,105 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"UserInfoTypes": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					},
+					"sex": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phNumber": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"age",
+					"sex",
+					"email",
+					"phNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserInfoResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserInfoTypes"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserInfoCreateRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					},
+					"sex": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phNumber": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"age",
+					"sex",
+					"email",
+					"phNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserInfoUpdateRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					},
+					"sex": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phNumber": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ProductTypes": {
 				"properties": {
 					"name": {
@@ -174,6 +273,193 @@
 		"contact": {}
 	},
 	"paths": {
+		"/v1/api/user-information": {
+			"post": {
+				"operationId": "CreateUserInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Create Success"
+					}
+				},
+				"tags": [
+					"User-information"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserInfoCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/api/user-information/{id}": {
+			"get": {
+				"operationId": "GetOneUserInfoById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User-information"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateUserInfoById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User-information"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserInfoUpdateRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteUserInfoById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User-information"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/v1/api/upload/uploadfile": {
+			"post": {
+				"operationId": "Upload",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"url": {
+											"type": "string"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"url",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Upload-file"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
 		"/v1/products": {
 			"get": {
 				"operationId": "GetAllProducts",

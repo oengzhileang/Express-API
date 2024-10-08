@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-import { ProductTypes } from "../types/product.type";
+import { ProductTypes } from "../../types/product.type";
 
 // Schema definition
 const ProductSchema = new Schema({
@@ -11,6 +11,6 @@ const ProductSchema = new Schema({
 });
 
 // Create a model from the schema
-const ProductsModel = model<ProductTypes>("Products", ProductSchema);
+const ProductsModel = model<ProductTypes>("testing", ProductSchema);
 
 export default ProductsModel;

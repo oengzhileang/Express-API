@@ -1,5 +1,5 @@
 import ProductsModel from "@/src/database/models/products.model";
-import { ProductTypes } from "@/src/database/types/product.type";
+import { ProductTypes } from "@/src/types/product.type";
 import {
   ProductCreateRequest,
   ProductUpdateRequest,
@@ -135,6 +135,7 @@ class ProductRepository {
       throw error;
     }
   }
+
   //delete product by id
   public async deleteProductById(
     id: string

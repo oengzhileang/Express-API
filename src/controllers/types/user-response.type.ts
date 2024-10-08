@@ -1,4 +1,4 @@
-import { ProductTypes } from "@/src/database/types/product.type";
+import { ProductTypes } from "@/src/types/product.type";
 
 export interface ProductResponse {
   message: string;

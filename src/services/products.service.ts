@@ -3,7 +3,7 @@ import {
   ProductUpdateRequest,
   ProductGetAllRequest,
 } from "@/src/controllers/types/product-request.type";
-import { ProductTypes } from "@/src/database/types/product.type";
+import { ProductTypes } from "@/src/types/product.type";
 import ProductRepository from "@/src/database/repositories/product.repository";
 // import { ProductResponse } from "../controllers/types/user-response.type";
 export class ProductService {
