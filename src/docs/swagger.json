@@ -37,6 +37,75 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UserInfoPaginatedResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"currentPages": {
+								"type": "number",
+								"format": "double"
+							},
+							"totalPages": {
+								"type": "number",
+								"format": "double"
+							},
+							"totalItems": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"additionalProperties": {
+							"anyOf": [
+								{
+									"items": {
+										"$ref": "#/components/schemas/UserInfoTypes"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number",
+									"format": "double"
+								}
+							]
+						},
+						"required": [
+							"currentPages",
+							"totalPages",
+							"totalItems"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserInfoGetAllRequest": {
+				"properties": {
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"filter": {
+						"type": "string"
+					},
+					"sort": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserInfoResponse": {
 				"properties": {
 					"message": {
@@ -260,6 +329,135 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"DeliveryMediumType": {
+				"type": "string",
+				"enum": [
+					"EMAIL",
+					"SMS"
+				]
+			},
+			"CodeDeliveryDetailsType": {
+				"description": "<p>The delivery details for an email or SMS message that Amazon Cognito sent for authentication or\n            verification.</p>",
+				"properties": {
+					"Destination": {
+						"type": "string",
+						"description": "<p>The email address or phone number destination where Amazon Cognito sent the code.</p>"
+					},
+					"DeliveryMedium": {
+						"$ref": "#/components/schemas/DeliveryMediumType",
+						"description": "<p>The method that Amazon Cognito used to send the code.</p>"
+					},
+					"AttributeName": {
+						"type": "string",
+						"description": "<p>The name of the attribute that Amazon Cognito verifies with the code.</p>"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseMetadata": {
+				"properties": {
+					"httpStatusCode": {
+						"type": "number",
+						"format": "double",
+						"description": "The status code of the last HTTP response received for this operation."
+					},
+					"requestId": {
+						"type": "string",
+						"description": "A unique identifier for the last request sent for this operation. Often\nrequested by AWS service teams to aid in debugging."
+					},
+					"extendedRequestId": {
+						"type": "string",
+						"description": "A secondary identifier for the last request sent. Used for debugging."
+					},
+					"cfId": {
+						"type": "string",
+						"description": "A tertiary identifier for the last request sent. Used for debugging."
+					},
+					"attempts": {
+						"type": "number",
+						"format": "double",
+						"description": "The number of times this operation was attempted."
+					},
+					"totalRetryDelay": {
+						"type": "number",
+						"format": "double",
+						"description": "The total amount of time (in milliseconds) that was spent waiting between\nretry attempts."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SignUpCommandOutput": {
+				"properties": {
+					"UserConfirmed": {
+						"type": "boolean",
+						"description": "<p>A response from the server indicating that a user registration has been\n            confirmed.</p>"
+					},
+					"CodeDeliveryDetails": {
+						"$ref": "#/components/schemas/CodeDeliveryDetailsType",
+						"description": "<p>The code delivery details returned by the server response to the user registration\n            request.</p>"
+					},
+					"UserSub": {
+						"type": "string",
+						"description": "<p>The 128-bit ID of the authenticated user. This isn't the same as\n            <code>username</code>.</p>"
+					},
+					"$metadata": {
+						"$ref": "#/components/schemas/ResponseMetadata",
+						"description": "Metadata pertaining to this request."
+					}
+				},
+				"required": [
+					"$metadata"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuthCreateRequest": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConfirmSignUpCommandOutput": {
+				"properties": {
+					"$metadata": {
+						"$ref": "#/components/schemas/ResponseMetadata",
+						"description": "Metadata pertaining to this request."
+					}
+				},
+				"required": [
+					"$metadata"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuthVerifyRequest": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"confirmationCode": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"confirmationCode"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -274,6 +472,61 @@
 	},
 	"paths": {
 		"/v1/api/user-information": {
+			"get": {
+				"operationId": "GetAllUserInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserInfoPaginatedResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User-information"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
 			"post": {
 				"operationId": "CreateUserInfo",
 				"responses": {
@@ -657,6 +910,158 @@
 						}
 					}
 				]
+			}
+		},
+		"/v1/auth/sign-up": {
+			"post": {
+				"operationId": "RegisterUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"$ref": "#/components/schemas/SignUpCommandOutput"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/verify-email": {
+			"post": {
+				"operationId": "VerifyEmail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"$ref": "#/components/schemas/ConfirmSignUpCommandOutput"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"data",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthVerifyRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/v1/auth/sign-in": {
+			"post": {
+				"operationId": "LoginUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
+										"idToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message",
+										"refreshToken",
+										"idToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

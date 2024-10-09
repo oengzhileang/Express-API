@@ -1,17 +1,4 @@
 import {
-  Body,
-  Controller,
-  Get,
-  Middlewares,
-  Post,
-  Response,
-  Route,
-  Path,
-  Patch,
-  Delete,
-  Queries,
-} from "tsoa";
-import {
   ProductCreateRequest,
   ProductGetAllRequest,
   ProductUpdateRequest,
@@ -24,6 +11,19 @@ import {
   ProductResponse,
 } from "./types/user-response.type";
 import ProductCreateSchema from "../schemas/product.schema";
+import {
+  Route,
+  Controller,
+  Get,
+  Queries,
+  Path,
+  Post,
+  Middlewares,
+  Body,
+  Patch,
+  Delete,
+  Response,
+} from "tsoa";
 
 //change word in route need to start again
 

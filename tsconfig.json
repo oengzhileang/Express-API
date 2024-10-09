@@ -18,7 +18,6 @@
     "noUnusedParameters": true,
     "alwaysStrict": true,
     "pretty": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }

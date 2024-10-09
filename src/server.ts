@@ -1,6 +1,7 @@
 import app from "@/src/app";
 import connectToMongoDB from "@/src/database/connectDB";
 import configs from "./config";
+
 async function run() {
   try {
     await connectToMongoDB();
