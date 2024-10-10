@@ -414,7 +414,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"AuthCreateRequest": {
+			"SignUpRequest": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -443,7 +443,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"AuthVerifyRequest": {
+			"VerifyUserRequest": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -455,6 +455,22 @@
 				"required": [
 					"email",
 					"confirmationCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SignInRequest": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -949,7 +965,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AuthCreateRequest"
+								"$ref": "#/components/schemas/SignUpRequest"
 							}
 						}
 					}
@@ -993,7 +1009,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AuthVerifyRequest"
+								"$ref": "#/components/schemas/VerifyUserRequest"
 							}
 						}
 					}
@@ -1010,23 +1026,13 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"refreshToken": {
-											"type": "string"
-										},
-										"idToken": {
-											"type": "string"
-										},
-										"accessToken": {
-											"type": "string"
-										},
+										"data": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"refreshToken",
-										"idToken",
-										"accessToken",
+										"data",
 										"message"
 									],
 									"type": "object"
@@ -1045,19 +1051,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"password": {
-										"type": "string"
-									},
-									"email": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"password",
-									"email"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/SignInRequest"
 							}
 						}
 					}
