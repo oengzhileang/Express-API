@@ -1010,9 +1010,6 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"message": {
-											"type": "string"
-										},
 										"refreshToken": {
 											"type": "string"
 										},
@@ -1021,13 +1018,16 @@
 										},
 										"accessToken": {
 											"type": "string"
+										},
+										"message": {
+											"type": "string"
 										}
 									},
 									"required": [
-										"message",
 										"refreshToken",
 										"idToken",
-										"accessToken"
+										"accessToken",
+										"message"
 									],
 									"type": "object"
 								}

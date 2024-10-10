@@ -1,16 +1,16 @@
 import { Controller, Post, Route, Tags, Body } from "tsoa";
 import {
-  AuthCreateRequest,
-  AuthVerifyRequest,
+  SignUpRequest,
+  VerifyUserRequest,
+  SignInRequest,
 } from "./types/auth-request.type";
-// import { AuthResponse } from "./types/auth-respone.type";
 import AuthService from "../services/auth.service";
 @Route("v1/auth")
 @Tags("Authentication")
 export class AuthController extends Controller {
   //sign up
   @Post("/sign-up")
-  async registerUser(@Body() requestBody: AuthCreateRequest) {
+  async registerUser(@Body() requestBody: SignUpRequest) {
     const { email, password } = requestBody;
     try {
       const result = await AuthService.signUp(email, password);
@@ -25,7 +25,7 @@ export class AuthController extends Controller {
 
   //verify
   @Post("/verify-email")
-  async verifyEmail(@Body() requestBody: AuthVerifyRequest) {
+  async verifyEmail(@Body() requestBody: VerifyUserRequest) {
     const { email, confirmationCode } = requestBody;
     try {
       const verifyEmail = await AuthService.verify(email, confirmationCode);
@@ -40,15 +40,15 @@ export class AuthController extends Controller {
 
   //sign in
   @Post("/sign-in")
-  async loginUser(@Body() requestBody: { email: string; password: string }) {
+  async loginUser(@Body() requestBody: SignInRequest) {
     try {
       const { email, password } = requestBody;
       const authResult = await AuthService.signIn(email, password);
       return {
         message: "User signed in successfully",
-        accessToken: authResult?.AccessToken,
-        idToken: authResult?.IdToken,
-        refreshToken: authResult?.RefreshToken,
+        accessToken: authResult.AuthenticationResult?.AccessToken,
+        idToken: authResult?.AuthenticationResult?.IdToken,
+        refreshToken: authResult?.AuthenticationResult?.RefreshToken,
       };
     } catch (error) {
       throw error;

@@ -1,8 +1,12 @@
-export interface AuthCreateRequest {
+export interface SignUpRequest {
   email: string;
   password: string;
 }
-export interface AuthVerifyRequest {
+export interface VerifyUserRequest {
   email: string;
   confirmationCode: string;
+}
+export interface SignInRequest {
+  email: string;
+  password: string;
 }
