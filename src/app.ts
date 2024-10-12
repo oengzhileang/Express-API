@@ -6,6 +6,7 @@ import { GlobalErrorHandler } from "./middlewares/global-error";
 import { getMethod } from "./middlewares/getMethod";
 import { requestTime } from "./middlewares/request-time";
 import { RegisterRoutes } from "./routes/v1/routes";
+import bodyParser from "body-parser";
 // Dynamically load swagger.json
 const swaggerDocument = JSON.parse(
   fs.readFileSync(path.join(__dirname, "docs/swagger.json"), "utf8")
@@ -15,7 +16,8 @@ const swaggerDocument = JSON.parse(
 // Initialize App Express
 // ========================
 const app = express();
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // ========================
 // Global Middleware
 // ========================

@@ -1,3 +1,13 @@
+// import AuthModel from "../models/auth.model";
+// import { AuthType } from "@/src/types/auth.type";
+
+// export const saveUserToMongo = async (email: string, cognitoId: string) => {
+//   const newUser: AuthType = new AuthModel({
+//     email,
+//     cognitoId,
+//   });
+//   return newUser.save();
+// };
 // import {
 //   CognitoIdentityProviderClient,
 //   SignUpCommand,

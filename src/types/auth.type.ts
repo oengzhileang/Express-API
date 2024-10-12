@@ -1,4 +1,6 @@
 export interface AuthType {
   email: string;
-  password: string;
+  cognitoId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

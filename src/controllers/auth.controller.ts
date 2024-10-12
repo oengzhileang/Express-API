@@ -1,4 +1,4 @@
-import { Controller, Post, Route, Tags, Body, Request } from "tsoa";
+import { Controller, Post, Route, Tags, Body, Request, Get, Query } from "tsoa";
 import {
   SignUpRequest,
   VerifyUserRequest,
@@ -8,6 +8,7 @@ import AuthService from "../services/auth.service";
 import setCookiee from "../utils/cookiee";
 import { Request as ExpressRequest, Response } from "express";
 import sendResponse from "../utils/send-response";
+
 @Route("v1/auth")
 @Tags("Authentication")
 export class AuthController extends Controller {
@@ -76,6 +77,38 @@ export class AuthController extends Controller {
       return sendResponse({ message: "Sign in successfully" });
     } catch (error) {
       throw error;
+    }
+  }
+
+  //login with google
+  @Get("/google/login")
+  public loginWithGoogle(@Query() state: string) {
+    const cognitoOAuthURL = AuthService.loginWithGoogle(state);
+    return sendResponse({
+      message: "Login with google successfully",
+      data: cognitoOAuthURL,
+    });
+  }
+
+  @Get("/google/callback")
+  public async handleCallBack(
+    @Query() code: string,
+    @Query() state: string
+  ): Promise<any> {
+    if (!code) {
+      throw new Error("Authorization code is missing.");
+    }
+
+    try {
+      // const authService = new AuthService();
+      const tokenData = await AuthService.handleCallBack(code, state);
+      return sendResponse({
+        message: "Access token retrieved successfully",
+        data: tokenData,
+      });
+    } catch (error) {
+      console.error("Failed to retrieve access token:", error);
+      throw new Error("Failed to retrieve access token");
     }
   }
 }

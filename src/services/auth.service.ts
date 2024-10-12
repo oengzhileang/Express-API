@@ -6,6 +6,9 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import { cognitoConfig } from "@/src/cognito.config";
 import { generateSecretHash } from "@/src/utils/cognito.util";
+import configs from "../config";
+import crypto from "crypto";
+import axios from "axios";
 // Initialize Cognito Client
 const cognitoClient = new CognitoIdentityProviderClient({
   region: cognitoConfig.region,
@@ -78,8 +81,76 @@ class AuthService {
       throw error;
     }
   }
-}
+  // public loginWithGoogle(state: string): string {
+  //   // const state = crypto.randomBytes(16).toString('hex')
+  //   const params = new URLSearchParams({
+  //     response_type: "code",
+  //     client_id: configs.COGNITO_CLIENT_ID,
+  //     redirect_uri: configs.REDIRECT_URL,
+  //     identity_provider: "google",
+  //     scope: "openid profile email",
+  //     state: state,
+  //     prompt: "select_account",
+  //   });
+  //   const cognitoOAuthURL = `${
+  //     configs.COGNITO_DOMAIN
+  //   }/oauth/authorize?${params.toString()}`;
+  //   console.log(cognitoOAuthURL);
 
+  //   return cognitoOAuthURL;
+  // }
+  public loginWithGoogle(state: string): string {
+    const stateValue = state || crypto.randomBytes(16).toString("hex");
+
+    const params = new URLSearchParams({
+      response_type: "code",
+      client_id: configs.COGNITO_CLIENT_ID,
+      redirect_uri: configs.COGNITO_REDIRECT_URL,
+      identity_provider: "Google",
+      scope: "openid profile email",
+      state: stateValue,
+      prompt: "select_account",
+    });
+    const cognitoOAuthURL = `${
+      configs.COGNITO_DOMAIN
+    }/oauth2/authorize?${params.toString()}`;
+
+    return cognitoOAuthURL;
+  }
+
+  // Callback to get access token
+  public async handleCallBack(code: string, _state: string): Promise<any> {
+    const tokenUrl = `${configs.COGNITO_DOMAIN}/oauth2/token`;
+
+    const params = new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: configs.COGNITO_CLIENT_ID,
+      redirect_uri: configs.COGNITO_REDIRECT_URL,
+      code: code,
+    });
+
+    // Base64 encode client_id and client_secret (if required)
+    const clientCredentials = `${configs.COGNITO_CLIENT_ID}:${
+      configs.COGNITO_CLIENT_SECRET || ""
+    }`;
+    const encodedCredentials =
+      Buffer.from(clientCredentials).toString("base64");
+
+    try {
+      const response = await axios.post(tokenUrl, params.toString(), {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Basic ${encodedCredentials}`,
+        },
+      });
+
+      return response.data; // Return the access token data
+    } catch (error) {
+      console.error("Failed to get tokens from Cognito:", error);
+      throw new Error("Failed to get tokens from Cognito");
+    }
+  }
+}
 //add more method as need
 export default new AuthService();
 
