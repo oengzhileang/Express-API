@@ -82,8 +82,8 @@ export class AuthController extends Controller {
 
   //login with google
   @Get("/google/login")
-  public loginWithGoogle(@Query() state: string) {
-    const cognitoOAuthURL = AuthService.loginWithGoogle(state);
+  public loginWithGoogle() {
+    const cognitoOAuthURL = AuthService.loginWithGoogle();
     return sendResponse({
       message: "Login with google successfully",
       data: cognitoOAuthURL,
@@ -91,7 +91,7 @@ export class AuthController extends Controller {
   }
 
   @Get("/google/callback")
-  public async handleCallBack(
+  public async getToken(
     @Query() code: string,
     @Query() state: string
   ): Promise<any> {
@@ -100,15 +100,13 @@ export class AuthController extends Controller {
     }
 
     try {
-      // const authService = new AuthService();
-      const tokenData = await AuthService.handleCallBack(code, state);
+      const tokenData = await AuthService.getToken(code, state);
       return sendResponse({
         message: "Access token retrieved successfully",
         data: tokenData,
       });
     } catch (error) {
       console.error("Failed to retrieve access token:", error);
-      throw new Error("Failed to retrieve access token");
     }
   }
 }

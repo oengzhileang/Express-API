@@ -99,8 +99,8 @@ class AuthService {
 
   //   return cognitoOAuthURL;
   // }
-  public loginWithGoogle(state: string): string {
-    const stateValue = state || crypto.randomBytes(16).toString("hex");
+  public loginWithGoogle(): string {
+    const stateValue = crypto.randomBytes(16).toString("hex");
 
     const params = new URLSearchParams({
       response_type: "code",
@@ -119,7 +119,7 @@ class AuthService {
   }
 
   // Callback to get access token
-  public async handleCallBack(code: string, _state: string): Promise<any> {
+  public async getToken(code: string, _state: string): Promise<any> {
     const tokenUrl = `${configs.COGNITO_DOMAIN}/oauth2/token`;
 
     const params = new URLSearchParams({

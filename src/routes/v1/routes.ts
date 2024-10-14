@@ -668,7 +668,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function AuthController_loginWithGoogle(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    state: {"in":"query","name":"state","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -694,9 +693,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/v1/auth/google/callback',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.handleCallBack)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.getToken)),
 
-            async function AuthController_handleCallBack(request: ExRequest, response: ExResponse, next: any) {
+            async function AuthController_getToken(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     code: {"in":"query","name":"code","required":true,"dataType":"string"},
                     state: {"in":"query","name":"state","required":true,"dataType":"string"},
@@ -711,7 +710,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 const controller = new AuthController();
 
               await templateService.apiHandler({
-                methodName: 'handleCallBack',
+                methodName: 'getToken',
                 controller,
                 response,
                 next,

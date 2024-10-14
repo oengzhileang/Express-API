@@ -1089,21 +1089,12 @@
 					"Authentication"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "state",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
+				"parameters": []
 			}
 		},
 		"/v1/auth/google/callback": {
 			"get": {
-				"operationId": "HandleCallBack",
+				"operationId": "GetToken",
 				"responses": {
 					"200": {
 						"description": "Ok",
